@@ -1,7 +1,15 @@
-const WIDTH = 800;
-const HEIGHT = 800;
-const BSIZE = 40;
+//import drawLineBasic from "./algorithms";
 
+const WIDTH = 1300;
+const HEIGHT = WIDTH;
+const BSIZE = 40;
+const ROWS = 30;
+const CELDA = WIDTH/ROWS;
+
+//let points = drawLineBasic(18,9,26,12)
+let points = drawLineDDA(-1,1,3,3)
+//nuevos_puntos = points.reverse()
+console.log(points) 
 
 function sketch(processing){
 
@@ -11,8 +19,8 @@ function sketch(processing){
     }
     processing.drawCanvas = function(world){
       
-      for (let i = 0; i < 20; i += 1) {
-        for (let j = 0; j < 20; j += 1) {
+      for (let i = 0; i < CELDA; i += 1) {
+        for (let j = 0; j < CELDA; j += 1) {
           processing.fill(84, 84, 69);
           processing.rect(j*BSIZE, i*BSIZE, BSIZE, BSIZE)
           
@@ -20,12 +28,23 @@ function sketch(processing){
           processing.rect(i*BSIZE, i*BSIZE, BSIZE, BSIZE) // Draw diagonal line
         }
       }
+      drawLine(points)
     }
     processing.onTic = function(world) {
+
     }
 
     processing.onMouseEvent = function (world, event) {
         return world;
+    }
+
+    function drawLine(points) {
+      processing.fill(0,0,0)
+      //processing.rect(0*BSIZE, 29*BSIZE, BSIZE, BSIZE)
+      let j = 30;
+      for (let i = 0; i<=points.length-1; i+=1) {
+        processing.rect(points[i][1]*BSIZE, (j-points[i][0])*BSIZE, BSIZE, BSIZE)
+      } 
     }
 
   // ******************** De aquí hacia abajo no debe cambiar nada. ********************
