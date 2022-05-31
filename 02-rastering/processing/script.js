@@ -1,13 +1,15 @@
 //import drawLineBasic from "./algorithms";
 
-const WIDTH = 1300;
+const WIDTH = 1200;
 const HEIGHT = WIDTH;
-const BSIZE = 40;
-const ROWS = 30;
+const BSIZE = 40
+const ROWS = 30
 const CELDA = WIDTH/ROWS;
 
+
 //let points = drawLineBasic(18,9,26,12)
-let points = drawLineDDA(-1,1,3,3)
+//let points = drawLineDDA(-1,1,3,3)
+let points = midPointCircleDraw(0,0,10);
 //nuevos_puntos = points.reverse()
 console.log(points) 
 
@@ -28,7 +30,8 @@ function sketch(processing){
           processing.rect(i*BSIZE, i*BSIZE, BSIZE, BSIZE) // Draw diagonal line
         }
       }
-      drawLine(points)
+      drawCircle(points)
+
     }
     processing.onTic = function(world) {
 
@@ -43,6 +46,16 @@ function sketch(processing){
       //processing.rect(0*BSIZE, 29*BSIZE, BSIZE, BSIZE)
       let j = 30;
       for (let i = 0; i<=points.length-1; i+=1) {
+        // Pendiente verificar 
+        processing.rect(points[i][1]*BSIZE, (j-points[i][0])*BSIZE, BSIZE, BSIZE)
+      } 
+    }
+
+    function drawCircle(points) {
+      processing.fill(0, 0, 0)
+      let j = 30;
+      for (let i = 0; i<=points.length-1; i+=1) {
+        processing.rect(points[i][0]*BSIZE, (j-points[i][1])*BSIZE, BSIZE, BSIZE)
         processing.rect(points[i][1]*BSIZE, (j-points[i][0])*BSIZE, BSIZE, BSIZE)
       } 
     }

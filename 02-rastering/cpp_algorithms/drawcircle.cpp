@@ -14,9 +14,9 @@ void midPointCircleDraw(int x_centre, int y_centre, int r)
     // point will be printed
     if (r > 0)
     {
-        cout << "(" << x + x_centre << ", " << -y + y_centre << ") ";
-        cout << "(" << y + x_centre << ", " << x + y_centre << ") ";
-        cout << "(" << -y + x_centre << ", " << x + y_centre << ")\n";
+        //cout << "(" << x + x_centre << ", " << -y + y_centre << ") ";
+        cout << "(" << y + x_centre << ", " << x + y_centre << ") "; 
+        //cout << "(" << -y + x_centre << ", " << x + y_centre << ")\n";
     }
      
     // Initialising the value of P
@@ -46,9 +46,9 @@ void midPointCircleDraw(int x_centre, int y_centre, int r)
          
         // If the generated point is on the line x = y then
         // the perimeter points have already been printed
-        if (x != y){
+        /* if (x != y){
             cout << "(" << y + x_centre << ", " << x + y_centre << ") \n";
-        }
+        } */
     }
 }
  

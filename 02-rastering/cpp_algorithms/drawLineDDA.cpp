@@ -1,4 +1,6 @@
 #include<iostream>
+#include <math.h>
+
 using namespace std;
  
 void drawLineDDA(int x1, int y1, int x2, int y2){
@@ -14,18 +16,17 @@ void drawLineDDA(int x1, int y1, int x2, int y2){
     dx=dx/step;
     dy=dy/step;
     
-    int xi,yi;
+    float xi,yi;
 
     xi=x1;
     yi=y1;
     int i=1;
-    while(i<=step){
+    while(i<=step+1){
+        cout << "i: "<< i <<" (" << roundf(xi) << ", " << roundf(yi) << ") step: "<< step <<"\n";
         xi=xi+dx;
         yi=yi+dy;
         i=i+1;
-        cout << "i: "<< i <<" (" << xi << ", " << yi << ") step: "<< step <<"\n";
     }
-    
 }
  
 // Driver code
