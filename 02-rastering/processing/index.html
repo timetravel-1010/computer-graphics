@@ -11,24 +11,33 @@
         <h3>Rastering lines & circles</h3>
         <canvas id="canvas" width="300" height="300"></canvas>
         <hr/>
-        <form>
+        <form id="form">
             <label for="algs">Algorithm</label>
-            <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="algorithm">
                 <option value="lBasic">L. Basic</option>
                 <option value="lDDA">L. DDA</option>
                 <option value="lBres">L. Bresenham</option>
                 <option value="cMidp">C. Midpoint</option>
-                <option value="cBres">C. Bresenham</option>
             </select>
             <label for="x1">x1:</label>
             <input id="x1" name="x1" value="0">
             <label for="y1">y1:</label>
-            <input id="y2" name="y2" value="0">
+            <input id="y1" name="y1" value="0">
             <label for="x2">x2:</label>
-            <input id="x1" name="x1" value="20">
+            <input id="x2" name="x2" value="20">
             <label for="y2">y2:</label>
             <input id="y2" name="y2" value="20">
-            <input type="submit">
+            
+            <label for="origenX">Origen X:</label>
+            <input id="origenX" name="origenX" value="0">
+            <label for="origenY">Origen Y:</label>
+            <input id="origenY" name="origenY" value="0">
+
+            <label for="radio">Radio:</label>
+            <input id="radio" name="radio" value="0">
+
+            <button type="button" onclick="mostrarDibujo()">Enviar </button>
+
         </form>
         <script src="./js/processing.js"></script>
         <script src="./algorithms.js"></script>

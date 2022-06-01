@@ -24,9 +24,7 @@ function drawLineBasic(x1, y1, x2, y2){
             i=i+1;
         }
         return points
-    } else {
-        return drawLineBasic(y1, x1, y2, x2);
-    }
+    } 
 }
 
 /**
