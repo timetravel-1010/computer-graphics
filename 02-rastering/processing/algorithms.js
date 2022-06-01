@@ -7,14 +7,16 @@
  * @returns lista de puntos.
  */
 function drawLineBasic(x1, y1, x2, y2){
+   
+    let dx = Math.abs(x2-x1);
+    let dy = Math.abs(y2-y1);
+    let m = dy/dx;
     let points = []
-    dx = Math.abs(x2-x1);
-    dy = Math.abs(y2-y1);
-    m = dy/dx;
-    if (m >= 0 && m <= 1){
+
+    if (m >= 0 && m <= 1) {
         //xi, yi;
         i = x1;
-        yi=y1;
+        yi = y1;
         while(i <= x2){
             xi = i;
             points.push([xi, Math.round(yi)]);
@@ -22,6 +24,8 @@ function drawLineBasic(x1, y1, x2, y2){
             i=i+1;
         }
         return points
+    } else {
+        return drawLineBasic(y1, x1, y2, x2);
     }
 }
 
@@ -62,57 +66,60 @@ function drawLineDDA(x1, y1, x2, y2) {
 }
 
 /**
- * Función que implementa el algoritmo de Bresenham para dibujar líneas.
+ * Función que implementa el algoritmo de Bresenham para dibujo de círculos.
  * @param {integer} x1 coordenada x inicial.
- * @param {y inicial} y1 coordenada y inicial.
- * @param {x final} x2 coordenada x final
- * @param {y final} y2 coordenada y final.
+ * @param {integer} y1 coordenada y inicial.
+ * @param {integer} x2 coordenada x final.
+ * @param {integer} y2 coordenada y final.
+ * @param {integer} dx 
+ * @param {integer} dy 
+ * @param {float} decide 
+ * @returns lista de puntos.
  */
-function drawLineBres(x1, y1, x2, y2) {
+ function plotPixel(x1, y1, x2, y2, dx, dy, decide) {
+
+    let pk = 2 * dy - dx;
     let points = []
-    let m_new = 2 * (y2 - y1); 
-    let slope_error_new = m_new - (x2 - x1);
 
-    for (let x = x1, y = y1; x <= x2; x += 1) {
+    for (let i = 0; i <= dx; i++) {
+        points.push([x1, y1]);
+
+        x1 = x1 < x2 ? x1 += 1 : x1 -= 1;
+        if (pk < 0) {
+            if (decide == 0) 
+                pk = pk + 2 * dy;
+            else 
+                pk = pk + 2 * dy;
+        }
+        else {
+            y1 = y1 < y2 ? y1 += 1 : y1 -= 1;
+            pk = pk + 2 * dy - 2 * dx;
+        }
+    }
+    return points;
+}
  
-        points.push(x,y )
-        // Add slope to increment angle formed
-        slope_error_new += m_new;
-    
-        // Slope error reached limit, time to
-        // increment y and update slope error.
-        if (slope_error_new >= 0) {
-            y++;
-            slope_error_new  -= 2 * (x2 - x1);
-        }
-    }
- }
-
 /**
- * Función que implementa el algoritmo de Bresenham para dibujar líneas.
+ * Función auxiliar para implementar el algoritmo de Bresenham para dibujo de círculos.
  * @param {integer} x1 coordenada x inicial.
- * @param {y inicial} y1 coordenada y inicial.
- * @param {x final} x2 coordenada x final
- * @param {y final} y2 coordenada y final.
+ * @param {integer} y1 coordenada y inicial.
+ * @param {integer} x2 coordenada x final.
+ * @param {integer} y2 coordenada y final.
+ * @returns lista de puntos.
  */
-function bresenham(x1 , y1 , x2,y2) {
-    let m_new = 2 * (y2 - y1);
-    let slope_error_new = m_new - (x2 - x1);
-  
-    for (x = x1, y = y1; x <= x2; x++) {
-        console.log("(" +x + "," + y + ")\n");
+function drawLineBresenham(x1, y1, x2, y2) {
+    let points = []
 
-        // Add slope to increment angle formed
-        slope_error_new += m_new;
+    let dx = Math.abs(x2 - x1);
+    let dy = Math.abs(y2 - y1);
 
-        // Slope error reached limit, time to
-        // increment y and update slope error.
-        if (slope_error_new >= 0) {
-            y += 1;
-            slope_error_new -= 2 * (x2 - x1);
-        }
-    }
-} 
+    if (dx > dy) 
+        points = plotPixel(x1, y1, x2, y2, dx, dy, 0);
+    else 
+        points = plotPixel(y1, x1, y2, x2, dy, dx, 1);
+
+    return points
+}
 
 /**
  * Función que implementa el algoritmo del punto medio para dibujar círculos.
@@ -149,61 +156,3 @@ function midPointCircleDraw(x_centre, y_centre, r) {
     }
     return points
 }
-
-
-/**
- * Función que implementa el algoritmo de Bresenham para dibujo de círculos.
- * @param {integer} x1 coordenada x inicial.
- * @param {integer} y1 coordenada y inicial.
- * @param {integer} x2 coordenada x final.
- * @param {integer} y2 coordenada y final.
- * @param {integer} dx 
- * @param {integer} dy 
- * @param {float} decide 
- * @returns lista de puntos.
- */
-function plotPixel(x1, y1, x2, y2, dx, dy, decide) {
-
-    let pk = 2 * dy - dx;
-    let points = []
-
-    for (let i = 0; i <= dx; i++) {
-        points.push([x1, y1]);
-
-        x1 = x1 < x2 ? x1 += 1 : x1 -= 1;
-        if (pk < 0) {
-            if (decide == 0) 
-                pk = pk + 2 * dy;
-            else 
-                pk = pk + 2 * dy;
-        }
-        else {
-            y1 = y1 < y2 ? y1 += 1 : y1 -= 1;
-            pk = pk + 2 * dy - 2 * dx;
-        }
-    }
-    return points;
-}
- 
-/**
- * Función auxiliar para implementar el algoritmo de Bresenham para dibujo de círculos.
- * @param {integer} x1 coordenada x inicial.
- * @param {integer} y1 coordenada y inicial.
- * @param {integer} x2 coordenada x final.
- * @param {integer} y2 coordenada y final.
- * @returns lista de puntos.
- */
-function main_bresenham(x1, y1, x2, y2) {
-    let points = []
-
-    let dx = Math.abs(x2 - x1);
-    let dy = Math.abs(y2 - y1);
-
-    if (dx > dy) 
-        points = plotPixel(x1, y1, x2, y2, dx, dy, 0);
-    else 
-        points = plotPixel(y1, x1, y2, x2, dy, dx, 1);
-
-    return points
-}
-

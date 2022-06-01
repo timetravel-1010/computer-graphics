@@ -1,24 +1,24 @@
 const BSIZE = 20;
 
-const ROWS = 25; /* Creo que esto es lo que ingresa el usuario */
+const ROWS = 30; /* Creo que esto es lo que ingresa el usuario */
 const COLUMNS = ROWS; /* Lo de arriba */
 
 const WIDTH = BSIZE*COLUMNS; 
 const HEIGHT = BSIZE*ROWS;
 
 /* Cuadrado azul oscuro. */
-let origenX = 11;  
-let origenY = 11;
+let origenX = 12;  
+let origenY = 18;
 
 /* Cuadrado azul claro */
 let nuevoOrigenX = -2; /* 0 si no cambia el origen */
 let nuevoOrigenY = -3; /* 0 si no cambia el origen */
 
-let radio = 8;
+//let radio = 8;
+//let points = midPointCircleDraw(0, 0,/* En todo caso se debe dejar con centro (0,0) */
+//                                radio); /* Si se pide otro centro se cambia en las variables nuevoOrigen */
 
-let points = midPointCircleDraw(0, 0,/* En todo caso se debe dejar con centro (0,0) */
-                                radio); /* Si se pide otro centro se cambia en las variables nuevoOrigen */
-console.log(points)
+let points = midPointCircleDraw(0,0,8)
 
 /**
  * Función principal para utilizar processing.
@@ -26,12 +26,107 @@ console.log(points)
  */
 function sketch(processing){
 
+    /* ******************** Clases ******************** */
+
+    class Drawer {
+        constructor(origenX, origenY, nuevoOrigenX, nuevoOrigenY) {
+            this.origenX = origenX;
+            this.origenY = origenY;
+            this.nuevoOrigenX = nuevoOrigenX;
+            this.nuevoOrigenY = nuevoOrigenY;
+        }
+
+        /**
+         * Función utilizada para pintar puntos.
+         * @param {list_of_points} points lista de puntos a pintar.
+         */
+        drawPoints(points) {
+            processing.fill(0,0,0)
+            let j = 30;
+            
+            for (let i = 0; i <= (points.length - 1); i+=1) {
+                processing.rect( (points[i][0] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
+                                ((this.origenY - this.nuevoOrigenY) - points[i][1]) * BSIZE, 
+                                BSIZE, BSIZE)
+            } 
+        }
+
+        /**
+         * Función utilizada para pintar un cuadrado con la diferencia de que se invierten las coordenadas
+         * x y y de cada punto de la lista.
+         * @param {list_of_points} points lista de puntos de la forma (y, x).
+         */
+        drawLineReverse(points) {
+            processing.fill(0,0,0)
+
+            let j = 30;
+
+            for (let i = 0; i <= (points.length - 1); i+=1) {
+                processing.rect( (points[i][1] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
+                                ((this.origenY - this.nuevoOrigenY) - points[i][0]) * BSIZE, 
+                                BSIZE, BSIZE)
+            } 
+            console.log(points)
+        }
+
+        /**
+         * Función utilizada para pintar un círculo por completo.
+         * @param {list_of_points} points lista de puntos de un octante de círculo.
+         */
+        drawFullCircle(points) {
+            let points_reflected = this.mirror(points) //se obtienen los otros puntos para completar el círculo.
+            let j = 30;
+            processing.fill(183,183,183);
+            
+            for (let i = 0; i<=points_reflected.length-1; i+=1) {
+            processing.rect( (points_reflected[i][0] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
+                            ((this.origenY - this.nuevoOrigenY) - points_reflected[i][1]) * BSIZE, 
+                            BSIZE, BSIZE)
+            } 
+            this.drawPoints(points) //se pintan los puntos que retorna el algoritmo.
+        }
+
+        /**
+         * Función usada para obtener el reflejo de los puntos de una lista en los otros cuadrantes.
+         * @param {list_of_points} points lista de puntos iniciales.
+         * @returns nueva lista de puntos.
+         */
+        mirror(points) {
+            let points_reflected = [];
+    
+            for (let i = 0; i<points.length; i += 1) {
+                points_reflected.push([points[i][0]*-1, points[i][1]])
+                points_reflected.push([points[i][0], points[i][1]*-1])
+                points_reflected.push([points[i][0]*-1, points[i][1]*-1])
+                points_reflected.push([points[i][1], points[i][0]])
+                points_reflected.push([points[i][1]*-1, points[i][0]])
+                points_reflected.push([points[i][1], points[i][0]*-1])
+                points_reflected.push([points[i][1]*-1, points[i][0]*-1])
+            }
+            return points_reflected;
+        }
+
+        setOrigen(x, y) {
+            this.origenX = x;
+            this.origenY = y;
+        }
+        
+        setCentro(x, y) {
+            this.nuevoOrigenX = x;
+            this.nuevoOrigenY = y;
+        }
+    }
+    
+    /* ******************** Fin Clases ******************** */
+
+    const drawer = new Drawer(origenX, origenY, nuevoOrigenX, nuevoOrigenY);
+
     /**
      * setup: configuración inicial. (pantalla y tasa de fotogramas)
      */
     processing.setup = function() {
-      processing.frameRate(2); // fps
-		  processing.size(WIDTH, HEIGHT);
+        processing.frameRate(2); // fps
+		processing.size(WIDTH, HEIGHT);
     }
 
     /**
@@ -40,17 +135,18 @@ function sketch(processing){
      */
     processing.drawCanvas = function(world) {
       
-      for (let i = 0; i < ROWS; i += 1) {
-        for (let j = 0; j < COLUMNS; j += 1) {
-          processing.fill(130, 130, 130);
-          processing.rect(j*BSIZE, i*BSIZE, BSIZE, BSIZE);
+        for (let i = 0; i < ROWS; i += 1) {
+            for (let j = 0; j < COLUMNS; j += 1) {
+                processing.fill(130, 130, 130);
+                processing.rect(j*BSIZE, i*BSIZE, BSIZE, BSIZE);
+            }
         }
-      }
-      drawFullCircle(points)
-      processing.fill(0, 0, 100)
-      processing.rect(origenX*BSIZE, origenY*BSIZE, BSIZE, BSIZE) // punto de origen (0,0)
-      processing.fill(0, 204, 204)
-      processing.rect((origenX + nuevoOrigenX)*BSIZE, (origenY - nuevoOrigenY)*BSIZE, BSIZE, BSIZE) // punto de origen arbitrario.
+        drawer.drawFullCircle(points)
+
+        processing.fill(0, 0, 100)
+        processing.rect(origenX*BSIZE, origenY*BSIZE, BSIZE, BSIZE) // punto de origen (0,0)
+        processing.fill(0, 204, 204)
+        processing.rect((origenX + nuevoOrigenX)*BSIZE, (origenY - nuevoOrigenY)*BSIZE, BSIZE, BSIZE) // punto de origen arbitrario.
     }
 
     processing.onTic = function(world) {
@@ -58,99 +154,7 @@ function sketch(processing){
     }
 
     processing.onMouseEvent = function (world, event) {
-      return world;
-    }
-
-    /**
-     * Función utilizada para pintar puntos.
-     * @param {list_of_points} points lista de puntos a pintar.
-     */
-    function drawPoints(points) {
-      
-      processing.fill(0,0,0)
-      let j = 30;
-      
-      for (let i = 0; i<=points.length-1; i+=1) {
-        processing.rect( (points[i][0] + (origenX + nuevoOrigenX)) * BSIZE, 
-                         ((origenY - nuevoOrigenY) - points[i][1]) * BSIZE, 
-                         BSIZE, BSIZE)
-      } 
-    }
-
-    /**
-     * Función usada para obtener el reflejo de los puntos de una lista en los otros cuadrantes.
-     * @param {list_of_points} points lista de puntos iniciales.
-     * @returns nueva lista de puntos.
-     */
-    function mirror(points) {
-
-      let points_reflected = [];
-
-      for (let i = 0; i<points.length; i += 1) {
-        points_reflected.push([points[i][0]*-1, points[i][1]])
-        points_reflected.push([points[i][0], points[i][1]*-1])
-        points_reflected.push([points[i][0]*-1, points[i][1]*-1])
-        points_reflected.push([points[i][1], points[i][0]])
-        points_reflected.push([points[i][1]*-1, points[i][0]])
-        points_reflected.push([points[i][1], points[i][0]*-1])
-        points_reflected.push([points[i][1]*-1, points[i][0]*-1])
-      }
-      return points_reflected;
-    }
-
-    /**
-     * Función utilizada para pintar un círculo por completo.
-     * @param {list_of_points} points lista de puntos de un octante de círculo.
-     */
-    function drawFullCircle(points) {
-      let points_reflected = mirror(points) //se obtienen los otros puntos para completar el círculo.
-      let j = 30;
-      processing.fill(183,183,183);
-      
-      for (let i = 0; i<=points_reflected.length-1; i+=1) {
-        processing.rect( (points_reflected[i][0] + (origenX + nuevoOrigenX)) * BSIZE, 
-                         ((origenY - nuevoOrigenY) - points_reflected[i][1]) * BSIZE, 
-                         BSIZE, BSIZE)
-      } 
-      drawPoints(points) //se pintan los puntos que retorna el algoritmo.
-    }
-
-    function drawCircleCentre(x_centre, y_centre, r) {
-      let points = midPointCircleDraw(x_centre, y_centre,r);
-      processing.fill(10, 10, 10)
-      processing.rect((x_centre+origenX)*BSIZE, (origenY-y_centre)*BSIZE, BSIZE, BSIZE)
-      processing.fill(0,0,0)
-      let j = 30;
-      for (let i = 0; i<=points.length-1; i+=1) {
-        // Pendiente verificar 
-        processing.rect((points[i][0]+origenX)*BSIZE, (origenY-points[i][1])*BSIZE, BSIZE, BSIZE)
-        //processing.rect((points[i][1]+origenX)*BSIZE, (origenY-points[i][0])*BSIZE, BSIZE, BSIZE)
-      } 
-    }
-
-
-    /**
-     * Función utilizada para pintar un cuadrado con la diferencia de que se invierten las coordenadas
-     * x y y de cada punto de la lista.
-     * @param {list_of_points} points lista de puntos de la forma (y, x).
-     */
-    function drawLineReverse(points) {
-      processing.fill(0,0,0)
-
-      let j = 30;
-
-      for (let i = 0; i<=points.length-1; i+=1) {
-        processing.rect(points[i][1]*BSIZE, (j-points[i][0])*BSIZE, BSIZE, BSIZE)
-      } 
-    }
-
-    function drawCircle(points) {
-      processing.fill(0, 0, 0)
-      let j = 30;
-      for (let i = 0; i<=points.length-1; i+=1) {
-        processing.rect(points[i][0]*BSIZE, (j-points[i][1])*BSIZE, BSIZE, BSIZE)
-        processing.rect(points[i][1]*BSIZE, (j-points[i][0])*BSIZE, BSIZE, BSIZE)
-      } 
+        return world;
     }
 
 
