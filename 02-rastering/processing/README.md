@@ -33,7 +33,6 @@ En caso de que no se visualice por completo un dibujo se puede proceder a mover 
 ![ejemplo-circunferencia](capturas/circunferencia-completa.png)
 
 
-Aqui puede ir otro ejemplo, esta vez utilizando un algoritmo de dibujo de líneas.
 
 ___
 
