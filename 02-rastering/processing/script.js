@@ -10,8 +10,17 @@ var COLUMNS = prompt("Columnas: ");
 var points = [0, 0, 0, 0]
 
 /* Cuadrado azul oscuro. */
-var origenX = 2;  
-var origenY = ROWS-2;
+let origenX = 2;  
+let origenY = ROWS-2;
+
+const BSIZE = 20;
+
+var WIDTH = BSIZE*COLUMNS; 
+var HEIGHT = BSIZE*ROWS;
+
+/* Cuadrado azul claro */
+let nuevoOrigenX = 0; /* 0 si no cambia el origen */
+let nuevoOrigenY = 0; /* 0 si no cambia el origen */
 
 function mostrarDibujo() {
   var x1 = parseInt(document.getElementById("x1").value);
@@ -27,7 +36,6 @@ function mostrarDibujo() {
   var selected = answer.options[answer.selectedIndex].text;
 
   if (selected == "L. Basic") {
-    console.log("Hola")
     if ((y2-y1)/(x2-x1) < 1)
       points = [0, drawLineBasic(x1, y1, x2, y2)]
     else 
@@ -37,24 +45,20 @@ function mostrarDibujo() {
     points = [0, drawLineDDA(x1, y1, x2, y2)]
   }
   else if (selected == "L. Bresenham") {
-    points = [0, drawLineBresenham(x1, y1, x2, y2)]
+    if ((y2-y1)/(x2-x1) < 1)
+      points = [0, drawLineBresenham(x1, y1, x2, y2)]
+    else 
+      points = [1, drawLineBresenham(y1, x1, y2, x2)]
   }
-  else if (selected == "C. Midpoint") {
-    points = [2, midPointCircleDraw(x1, y1, radio)]
+  else if (selected == "C. Midpoint") { 
+    points = [2, midPointCircleDraw(0, 0, radio)]
+    nuevoOrigenX = x1;
+    nuevoOrigenY = y1;
   }
-
   console.log(points)
 }
 
 
-const BSIZE = 20;
-
-var WIDTH = BSIZE*COLUMNS; 
-var HEIGHT = BSIZE*ROWS;
-
-/* Cuadrado azul claro */
-let nuevoOrigenX = -2; /* 0 si no cambia el origen */
-let nuevoOrigenY = -3; /* 0 si no cambia el origen */
 
 
 
@@ -69,12 +73,8 @@ function sketch(processing){
 
 
   class Drawer {
-    constructor(origenX, origenY, nuevoOrigenX, nuevoOrigenY) {
-      this.origenX = origenX;
-      this.origenY = origenY;
-      this.nuevoOrigenX = nuevoOrigenX;
-      this.nuevoOrigenY = nuevoOrigenY;
-      processing = processing;
+    constructor() {
+
     }
 
   /**
@@ -86,8 +86,8 @@ function sketch(processing){
       let j = 30;
       
       for (let i = 0; i <= (points.length - 1); i+=1) {
-          processing.rect( (points[i][0] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
-                          ((this.origenY - this.nuevoOrigenY) - points[i][1]) * BSIZE, 
+          processing.rect( (points[i][0] + (origenX + nuevoOrigenX)) * BSIZE, 
+                          ((origenY - nuevoOrigenY) - points[i][1]) * BSIZE, 
                           BSIZE, BSIZE)
       } 
   }
@@ -103,8 +103,8 @@ function sketch(processing){
       let j = 30;
 
       for (let i = 0; i <= (points.length - 1); i+=1) {
-          processing.rect( (points[i][1] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
-                          ((this.origenY - this.nuevoOrigenY) - points[i][0]) * BSIZE, 
+          processing.rect( (points[i][1] + (origenX + nuevoOrigenX)) * BSIZE, 
+                          ((origenY - nuevoOrigenY) - points[i][0]) * BSIZE, 
                           BSIZE, BSIZE)
       } 
   }
@@ -114,14 +114,16 @@ function sketch(processing){
    * @param {list_of_points} points lista de puntos de un octante de círculo.
    */
   drawFullCircle(points) {
-    console.log("Here")
+    
       let points_reflected = this.mirror(points) //se obtienen los otros puntos para completar el círculo.
+      
+      console.log("reflected points: ", points_reflected)
       let j = 30;
       processing.fill(183,183,183);
       
       for (let i = 0; i<=points_reflected.length-1; i+=1) {
-      processing.rect( (points_reflected[i][0] + (this.origenX + this.nuevoOrigenX)) * BSIZE, 
-                      ((this.origenY - this.nuevoOrigenY) - points_reflected[i][1]) * BSIZE, 
+      processing.rect( (points_reflected[i][0] + (origenX + nuevoOrigenX)) * BSIZE, 
+                      ((origenY - nuevoOrigenY) - points_reflected[i][1]) * BSIZE, 
                       BSIZE, BSIZE)
       } 
       this.drawPoints(points) //se pintan los puntos que retorna el algoritmo.
@@ -146,22 +148,13 @@ function sketch(processing){
       }
       return points_reflected;
   }
-
-  setOrigen(x, y) {
-      this.origenX = x;
-      this.origenY = y;
-  }
-  
-  setCentro(x, y) {
-      this.nuevoOrigenX = x;
-      this.nuevoOrigenY = y;
-  }
 }
 
 /* ******************** Fin Clases ******************** */
 
-
-    const drawer = new Drawer(processing, origenX, origenY, nuevoOrigenX, nuevoOrigenY);
+    console.log("datos: ")
+    console.log()
+    const drawer = new Drawer(origenX, origenY, nuevoOrigenX, nuevoOrigenY);
 
     /**
      * Función que pinta todo en el lienzo.
