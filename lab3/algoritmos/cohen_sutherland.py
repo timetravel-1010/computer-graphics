@@ -108,7 +108,7 @@ def cohenSutherlandClip(P1, P2, EII=[xMin,yMin], ESD=[xMax,yMax]):
 
 	if accept:
 		print("Line accepted from %.2f, %.2f to %.2f, %.2f" % (x1, y1, x2, y2))
-		return [[x1,y1],[x2,y2]]
+		return [[int(x1),int(y1)],[int(x2),int(y2)]]
 	else:	
 		print("Line rejected")
 		return False
@@ -117,13 +117,13 @@ if __name__ == "__main__":
 	# Driver Script
 	# First Line segment
 	# P11 = (5, 5), P12 = (7, 7)
-	resultado = cohenSutherlandClip(5, 5, 7, 7)
+	resultado = cohenSutherlandClip([5, 5],[ 7, 7])
 	print("res: ", resultado)
 
 	# Second Line segment
 	# P21 = (7, 9), P22 = (11, 4)
-	cohenSutherlandClip(7, 9, 11, 4)
+	cohenSutherlandClip([7, 9], [11, 4])
 
 	# Third Line segment
 	# P31 = (1, 5), P32 = (4, 1)
-	cohenSutherlandClip(1, 5, 4, 1)
+	cohenSutherlandClip([1, 5], [4, 1])

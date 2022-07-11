@@ -1,8 +1,10 @@
 ﻿import pygame as pg
 import os, sys
 
-from algoritmos.cohen_sutherland import cohenSutherlandClip
 from algoritmos.lineas.bresenham import bresenham
+from algoritmos.cohen_sutherland import cohenSutherlandClip
+from algoritmos.cyrus_beck import CyrusBeckClip
+from algoritmos.sutherland_hodgman import sutherland_hodgman
 
 # Defining x_max, y_max and x_min, y_min for rectangle
 # Since diagonal points are enough to define a rectangle
@@ -11,7 +13,7 @@ y_max = 8.0
 x_min = 4.0
 y_min = 4.0
 
-n = 48#matriz nxn, 480 -> 1:1 pixel
+n = 480 #matriz nxn, 480 -> 1:1 pixel
 ancho = 720 #ancho de la pantalla
 alto = ancho
 size = ancho // n #tamaño del lado de cada cuadrado
@@ -20,8 +22,8 @@ ticks = 3 #velocidad del reloj, mayor valor -> mayor velocidad.
 colores = { "viewport": (150,150,150) }
 
 # origen de coordenadas
-x0 = 10
-y0 = n-20
+x0 = 0
+y0 = n-1
 
 #configuración inicial de la pantalla
 def setup():
@@ -68,6 +70,13 @@ def pintar_cuadrado(inicio, size):
     x, y = inicio
     xf, yf = x+size, y+size
 
+def pintar_poligono(puntos, color=(0,0,0)):
+    for i in range(0, len(puntos)-1): # range(0,4*) 4, 5
+        puntos_recta = bresenham(puntos[i], puntos[i+1])
+        print("i:",i)
+        pintar_linea(puntos_recta) # pendiente verificar 
+    ultima_recta = bresenham(puntos[0], puntos[-1])
+    pintar_linea(ultima_recta)
 # bucle infinito para mostrar en patalla todos los elementos gráficos.
 def mostrar_juego(viewport, puntos): 
     while True:
@@ -81,25 +90,15 @@ def mostrar_juego(viewport, puntos):
                 if event.key == pg.K_p:
                     pass
 
-        """ if (i >= 0):            
-            try:
-                pintar_mundo(resultado[i][1]) #pinta el mundo correspondiente al nodo actual.
-                robot.mover(resultado[i][0]) #se obtiene el operador para mover el robot. 
-                #print("combustible actual:", resultado[i][2])
-                #print("costo: ", resultado[i][3])
-                #print("heuristica: ", resultado[i][4])
-                robot.pintar()
-            except ValueError:
-                print("No se encontró la solución.") """
-
         #pintar el viewport
         pintar_viewport(viewport)
         pintar_linea(puntos)
         #pintar_linea(bresenham(P1,P2), (200,200,0))
         put_pixel(0, 0, (255,0,0)) #mostrar punto de origen relativo
-        """ for punto in puntos:
-            put_pixel(punto[0], punto[1], (200,100,200)) """
-
+        #pintar_poligono([[10,10], [20,10], [30, 20], [20, 30], [10, 30],[0,20]])
+        #pintar_poligono(((0,0),(100,0),(50,100)))
+        pol = [[100, 290], [100, 210], [275, 230], [150, 250], [275, 270], [100, 290]]
+        pintar_poligono(pol)
         #grid() #mostrar la cuadrícula.
         #pantalla.fill((255,255,255))
 
@@ -111,7 +110,6 @@ if __name__ == "__main__":
     global P1, P2
     setup() #pantalla
     clock = pg.time.Clock() #reloj para manipular la velocidad de la ejecución.
-    puntos = []
     x_min = 3.0
     y_min = 2.0
     x_max = 7.0
@@ -127,13 +125,14 @@ if __name__ == "__main__":
     P2 = [x2,y2]
 
     puntos = bresenham(P1, P2)
-    puntos_dentro = cohenSutherlandClip(P1, P2, EII, ESD)
-    puntos_dentro = list(map(lambda punto: [int(punto[0]), int(punto[1])], puntos_dentro))
-    print("resultado de c-s: ", puntos_dentro)
+    puntos_c_s = cohenSutherlandClip(P1, P2, EII, ESD)
+    puntos_c_b = CyrusBeckClip(P1, P2, EII, ESD)
+    print("resultado de c-s: ", puntos_c_s)
+    print("resultado de c-b:", puntos_c_b)
     print("linea: ", puntos)
     viewport = [EII, ESD]
-    i_0 = puntos.index(puntos_dentro[0])
-    i_f = puntos.index(puntos_dentro[1])
+    i_0 = puntos.index(puntos_c_s[0])
+    i_f = puntos.index(puntos_c_s[1])
     print("i_0 = ", i_0)
     print("i_f = ", i_f)
     print("dentro: ", puntos[i_0:i_f+1])
