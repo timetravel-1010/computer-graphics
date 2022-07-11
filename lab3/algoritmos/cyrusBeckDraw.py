@@ -1,23 +1,29 @@
-﻿import numpy as np
+﻿import PIL.ImageDraw as ID, PIL.Image as Image
+import numpy as np
 
-#vertices = [[10,10], [20,10], [20,20], [10,20]]
+# Code Start from here
+# Requirement
+# pip install pillow
+
+# im will show the overlapped between lines
+# im1 will show the clipped line
+im = Image.new("RGB", (640, 480))
+im1 = Image.new("RGB", (640, 480))
+draw = ID.Draw(im)
+draw2 = ID.Draw(im1)
+#draw.polygon((200, 50, 250, 100, 200, 150, 100, 150, 50, 100, 100, 50), outline=255)
+draw.polygon((5, 5, 20, 2, 16, 10, 10, 10), outline=255)
+draw2.polygon((5, 5, 20, 2, 16, 10, 10, 10), outline=255)
 #vertices = [[200, 50], [250, 100], [200, 150], [100, 150], [50, 100], [100, 50]]
-# parece ser que los vertices van en sentido antihorario
+vertices = [[5, 5], [20, 2], [16, 10], [10, 10]]
 n = 4
+
 
 def dot(x1, y1, x2, y2):
     return x1 * x2 + y1 * y2
 
-def CyrusBeckClip(P1, P2, vertices_viewport=None, EII=None, ESD=None):
-    x1, y1 = P1
-    x2, y2 = P2
-    vertices = list()
-    if (EII and ESD):
-        x_min, y_min = EII
-        x_max, y_max = ESD
-        vertices = [[x_min, y_min], [x_max, y_min], [x_max, y_max], [x_min, y_max]]
-    else:
-        vertices = vertices_viewport
+
+def CyrusBeckLineClipping(x1, y1, x2, y2):
     normal = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
 
     for i in range(0, n):
@@ -55,26 +61,28 @@ def CyrusBeckClip(P1, P2, vertices_viewport=None, EII=None, ESD=None):
     temp1 = np.amin(tL)
 
     if temp0 > temp1:
+        print("se cumple")
         return
 
     New_X1 = float(x1) + float(dx) * float(temp0)
     New_Y1 = float(y1) + float(dy) * float(temp0)
     New_X2 = float(x1) + float(dx) * float(temp1)
     New_Y2 = float(y1) + float(dy) * float(temp1)
-    puntos =  [[int(New_X1), int(New_Y1)], [int(New_X2), int(New_Y2)]]
-    return puntos
-    
+    draw2.line((New_X1, New_Y1, New_X2, New_Y2), fill=(0, 255, 0))
+    print("nuevos: ", (New_X1, New_Y1, New_X2, New_Y2))
+
+def clippingProcess(x1, y1, x2, y2):
+    draw.line((x1, y1, x2, y2), fill=(0, 255, 0)) #color of the line
+    CyrusBeckLineClipping(x1, y1, x2, y2)
 
 if __name__ == '__main__':
-    """ x1 = int(input("x1: "))
+    x1 = int(input("x1: "))
     y1 = int(input("y1: "))
     x2 = int(input("x2: "))
-    y2 = int(input("y2: ")) """
-    x1 = 1
-    y1 = 2
-    x2 = 23
-    y2 = 12
-    vertices = [[5, 5], [20, 2], [16, 10], [10, 10]]
-    #vertices = [[5,5], [10,10], [16,10],  [20,2]]
-    resultado = CyrusBeckClip([x1,y1], [x2,y2], vertices_viewport=vertices)
-    print("nuevos puntos: ", resultado)
+    y2 = int(input("y2: "))
+
+    clippingProcess(x1, y1, x2, y2)
+    im.show()
+    im.save('Before clipping using Cyrus-Beck.png')
+    im1.show()
+    im1.save('After clipping using Cyrus-Beck.png')

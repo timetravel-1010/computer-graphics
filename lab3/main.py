@@ -105,26 +105,74 @@ def mostrar_juego(viewport, puntos):
         #pg.display.update()
         pg.display.flip() #actualizar el mundo para mostrar nuevos cambios.
 
+""" Puntos de la EII y la ESD """
+def definir_viewport_E():
+    print("Ingrese los valores de la EII y la ESD del viewport")
+    x1 = int(input("Ingrese x1"))
+    y1 = int(input("Ingrese y1"))
+    x2 = int(input("Ingrese x2"))
+    y2 = int(input("Ingrese y2"))
+    
+    return [(x1,y1), (x2,y2)]
+
+def definir_viewport_TBLR():
+    top = int(input("Ingrese el valor para TOP: "))
+    bottom = int(input("Ingrese el valor para BOTTOM: "))
+    left = int(input("Ingrese el valor para LEFT: "))
+    right = int(input("Ingrese el valor para RIGHT: "))
+
+    return [(left,bottom), (left,top), (right,top), (right,bottom)]
+
+def definir_viewport_puntos():
+    print("Ingrese los valores de cada punto para el viewport (en el sentido del reloj)")
+    x1 = int(input("Ingrese x1"))
+    y1 = int(input("Ingrese y1"))
+    x2 = int(input("Ingrese x2"))
+    y2 = int(input("Ingrese y2"))
+    x3 = int(input("Ingrese x3"))
+    y3 = int(input("Ingrese y3"))
+    x4 = int(input("Ingrese x4"))
+    y4 = int(input("Ingrese y4"))
+
+    return [(x1,y1), (x2,y2), (x3,y3), (x4,y4)]
+
+def ingresar_datos_recta():
+    print("Ingrese los puntos inicial y final de la línea")
+    x1 = int(input("Ingrese x1"))
+    y1 = int(input("Ingrese y1"))
+    x2 = int(input("Ingrese x2"))
+    y2 = int(input("Ingrese y2"))
+
+    return [(x1,y1),(x2,y2)]
+    
+def ingresar_datos_poligono():
+    num_vertices = int(input("Ingrese el número de vértices del polígono: "))
+    for i in range(vertices_poligono):
+        vertices_poligono = []
+        print(f"vértice {i}:")
+        vertices_poligono.append(tuple(input("ingrese el valor de x: "), input("ingrese el valor de x: ")))
+    
+
 if __name__ == "__main__":
     # Inicio
     global P1, P2
     setup() #pantalla
     clock = pg.time.Clock() #reloj para manipular la velocidad de la ejecución.
-    x_min = 3.0
+    """ x_min = 3.0
     y_min = 2.0
     x_max = 7.0
     y_max = 6.0
     EII = [x_min, y_min]
-    ESD = [x_max, y_max]
+    ESD = [x_max, y_max] """
 
-    x1 = 5.0
+    """ x1 = 5.0
     y1 = 0.0
     x2 = 6.0
     y2 = 4.0
     P1 = [x1,y1]
-    P2 = [x2,y2]
+    P2 = [x2,y2] """
 
-    puntos = bresenham(P1, P2)
+    """  puntos = bresenham(P1, P2)
     puntos_c_s = cohenSutherlandClip(P1, P2, EII, ESD)
     puntos_c_b = CyrusBeckClip(P1, P2, EII, ESD)
     print("resultado de c-s: ", puntos_c_s)
@@ -132,9 +180,25 @@ if __name__ == "__main__":
     print("linea: ", puntos)
     viewport = [EII, ESD]
     i_0 = puntos.index(puntos_c_s[0])
-    i_f = puntos.index(puntos_c_s[1])
+    i_f = puntos.index(puntos_c_s[1]) """
+
+    #print("puntos: ", puntos)
+    x1 = 1
+    y1 = 2
+    x2 = 23
+    y2 = 12
+    vertices = [[5, 5], [20, 2], [16, 10], [10, 10]]
+    puntos = CyrusBeckClip([x1,y1], [x2,y2], vertices_viewport=vertices)
+    i_0 = puntos.index(puntos[0])
+    i_f = puntos.index(puntos[1])
     print("i_0 = ", i_0)
     print("i_f = ", i_f)
     print("dentro: ", puntos[i_0:i_f+1])
-    #print("puntos: ", puntos)
     mostrar_juego(viewport, puntos[i_0:i_f+1]) #mostrar el juego en pantalla.
+
+    """ tipo_recorte = int(input("Ingrese 1 para recorte de líneas o 2 para polígonos: "))
+    tipo_viewport = int(input("Ingrese la forma en la que quiere ingresar el viewport: 1 para EEI y ESD y 2 para (TOP, BOTTOM, LEFT, RIGHT)"))
+    if tipo_recorte == 1: # recorte de líneas
+        pass
+    else: # recorte de polígonos
+        pass """
