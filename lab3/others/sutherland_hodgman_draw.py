@@ -11,9 +11,10 @@ im1 = Image.new("RGB", (640, 480))
 draw2 = ID.Draw(im1)
 draw = ID.Draw(im)
 puntos_poligono = (200, 200, 400, 200, 400, 300, 200, 300)
+#puntos_poligono = [10,10, 20,30, 11,32, 32,14, 41,10]
 #print("clase: ", type(puntos_poligono))
 draw.polygon(puntos_poligono, outline=255)
-draw2.polygon((200, 200, 400, 200, 400, 300, 200, 300), outline=255)
+draw2.polygon((200, 200, 400, 200, 400, 300, 200, 300), outline=255) # rectángulo
 p1 = (400.0, 300.0)
 p4 = (200.0, 200.0)
 
@@ -129,6 +130,8 @@ def sutherland_hodgman(n, points):
     start = [final[startIndex][0], final[startIndex][1]]
     flag = 0
     back = [start[0], start[1]]
+    print("start: ", start)
+    print("final: ", final)
     for i in range(startIndex + 1, count + 1):
         if (flag == 1 and final[i][0] != None):
             flag = 0
@@ -141,15 +144,15 @@ def sutherland_hodgman(n, points):
             continue
 
         elif (final[i + 1][0] == None):
-            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(255, 255, 255))
-            draw.line((final[i][0], final[i][1], back[0], back[1]), fill=(255, 255, 255))
+            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(255, 255, 0))
+            draw.line((final[i][0], final[i][1], back[0], back[1]), fill=(0, 255, 255))
             if (i + 1 != count + 1):
                 index = findNext(i, count, final)
                 start[0] = final[index][0]
                 start[1] = final[index][1]
             flag = 1
         else:
-            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(255, 255, 255))
+            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(0, 0, 255))
             start[0] = final[i][0]
             start[1] = final[i][1]
         if (final[i - 1][0] == None):
@@ -166,10 +169,12 @@ if __name__ == '__main__':
     # Input taken in code
     # The algorithm begins with an input list of all vertices in the mentioned polygon
     point = [[100, 290], [100, 210], [275, 230], [150, 250], [275, 270], [100, 290]]
+    #point = [[10,10], [20,30], [11,32], [32,14], [41,10], [50,60]]
     orig = list()
     for i in range(0, 10):
         orig.append(point[i // 2][i % 2])
 
-    draw2.polygon(tuple(orig), outline=255)
+    #print("orig: ", orig)
+    draw2.polygon(tuple(orig), outline=255, fill=(0,100,0))
     time.sleep(2)
     sutherland_hodgman(6, point)

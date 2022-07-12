@@ -6,9 +6,9 @@ im = Image.new("RGB", (500,500))
 im1= Image.new("RGB", (500,500))
 draw2=ID.Draw(im1)
 draw = ID.Draw(im)
-draw.polygon((162, 110, 388, 19, 386, 103, 162, 247), outline = 255, fill=(0,0,255)) #viewport para el recortado
-draw2.polygon((162, 110, 388, 19, 386, 103, 162, 247), outline = 255, fill=(255,0,0)) # viewport inicial
-draw.polygon((242, 78, 480, 77, 480, 289, 242, 289), outline = 'white') #poligono a recortar
+draw.polygon((162, 110, 388, 19, 386, 103, 162, 247), outline = 255)
+draw2.polygon((162, 110, 388, 19, 386, 103, 162, 247), outline = 255)
+draw.polygon((242, 78, 480, 77, 480, 289, 242, 289), outline = 'green')
 
 # A line is a connected path between two points
 # point1(x1, y1) and point2(x2, y2)
@@ -338,7 +338,6 @@ def encode(Str):
     for i in range(len(X)):
         if (not floatEqual(X[i], X[i - 1])) or (not floatEqual(Y[i], Y[i - 1])):
             myList.append(Vertex(X[i], Y[i]))
-    print("lista pasada por encode: ", myList)
     return myList
 
 
@@ -370,7 +369,7 @@ def toClockwise(list):
     else:
         return list
 
-def weilerAthertonClip(poly1, poly2, output_clockwise = True):
+def PolyClipping(poly1, poly2, output_clockwise = True):
     print(poly1)
     print(poly2)
     listS = encode(poly1)
@@ -428,13 +427,13 @@ def weilerAthertonClip(poly1, poly2, output_clockwise = True):
     return  decode(results)
 
 if __name__ == '__main__':
-    poly1 = "240 76 480 75 480 287 240 287" #poligono a recortar
-    poly2 = "160 108 386 19 384 102 160 245" #viewport
-    point = weilerAthertonClip(poly1, poly2)
+    poly1 = "240 76 480 75 480 287 240 287"
+    poly2 = "160 108 386 19 384 102 160 245"
+    point = PolyClipping(poly1, poly2)
     points = point[0].split(' ')
-    """ print("puntos: ", list(map(lambda x: int(float(x)), points)))
-    print(points[0]) """
-    """ i = 0
+    print (points)
+    print (points[0])
+    i = 0
     while i < 8:
         if i == 6:
             draw1(float(points[i]),float(points[i+1]),float(points[0]),float(points[1]))
@@ -443,4 +442,6 @@ if __name__ == '__main__':
         i = i + 2
 
     im.show()
-    im1.show() """
+    im.save('Overlapping of two polygon.png')
+    im1.show()
+    im1.save('Clipped polygon result.png')

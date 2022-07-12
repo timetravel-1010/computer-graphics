@@ -107,10 +107,10 @@ def cohenSutherlandClip(P1, P2, EII=[xMin,yMin], ESD=[xMax,yMax]):
 				code2 = computeCode(x2, y2, x_min, y_min, x_max, y_max)
 
 	if accept:
-		print("Line accepted from %.2f, %.2f to %.2f, %.2f" % (x1, y1, x2, y2))
+		#print("Line accepted from %.2f, %.2f to %.2f, %.2f" % (x1, y1, x2, y2))
 		return [[int(x1),int(y1)],[int(x2),int(y2)]]
 	else:	
-		print("Line rejected")
+		#print("Line rejected")
 		return False
 
 if __name__ == "__main__":

@@ -8,7 +8,7 @@ n = 4
 def dot(x1, y1, x2, y2):
     return x1 * x2 + y1 * y2
 
-def CyrusBeckClip(P1, P2, vertices_viewport=None, EII=None, ESD=None):
+def CyrusBeckClip(P1, P2, n, vertices_viewport=None, EII=None, ESD=None):
     x1, y1 = P1
     x2, y2 = P2
     vertices = list()
@@ -70,11 +70,11 @@ if __name__ == '__main__':
     y1 = int(input("y1: "))
     x2 = int(input("x2: "))
     y2 = int(input("y2: ")) """
-    x1 = 1
-    y1 = 2
-    x2 = 23
-    y2 = 12
-    vertices = [[5, 5], [20, 2], [16, 10], [10, 10]]
+    x1 = 9
+    y1 = 60
+    x2 = 20
+    y2 = 90
+    vertices = [[160, 50], [80, 80], [10, 80], [10, 50]]
     #vertices = [[5,5], [10,10], [16,10],  [20,2]]
     resultado = CyrusBeckClip([x1,y1], [x2,y2], vertices_viewport=vertices)
     print("nuevos puntos: ", resultado)

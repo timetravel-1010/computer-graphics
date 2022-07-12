@@ -1,158 +1,157 @@
-﻿import time
+﻿import numpy as np
+import warnings
 
-puntos_poligono = (200, 200, 400, 200, 400, 300, 200, 300)
-p1 = (400.0, 300.0)
-p4 = (200.0, 200.0)
+# POINTS NEED TO BE PRESENTED CLOCKWISE OR ELSE THIS WONT WORK
 
-def computeCode(x, y):
-    code = 0
-    if x < p4[0]:
-        code = code | 1
-    elif x > p1[0]:
-        code = code | 2
-    if y < p4[1]:
-        code = code | 4
-    elif y > p1[1]:
-        code = code | 8
-    return code
-
-
-def lineClip(x1, y1, x2, y2):
-    code1 = computeCode(x1, y1)
-    code2 = computeCode(x2, y2)
-    accept = False
-    while True:
-        if code1 == 0 and code2 == 0:
-            accept = True
-            break
-        elif (code1 & code2) != 0:
-            break;
+class PolygonClipper:
+    
+    def __init__(self,warn_if_empty=True):
+        self.warn_if_empty = warn_if_empty
+    
+    def is_inside(self,p1,p2,q):
+        R = (p2[0] - p1[0]) * (q[1] - p1[1]) - (p2[1] - p1[1]) * (q[0] - p1[0])
+        if R <= 0:
+            return True
         else:
-            x = 1.0
-            y = 1.0
-            if code1 != 0:
-                code_out = code1
-            else:
-                code_out = code2
-            if code_out & 8:
-                x = x1 + (x2 - x1) * (p1[1] - y1) / (y2 - y1)
-                y = p1[1]
-            elif code_out & 4:
-                x = x1 + (x2 - x1) * (p4[1] - y1) / (y2 - y1)
-                y = p4[1]
-            elif code_out & 2:
-                y = y1 + (y2 - y1) * (p1[0] - x1) / (x2 - x1)
-                x = p1[0]
-            elif code_out & 1:
-                y = y1 + (y2 - y1) * (p4[0] - x1) / (x2 - x1)
-                x = p4[0]
-            if code_out == code1:
-                x1 = x
-                y1 = y
-                code1 = computeCode(x1, y1)
-            else:
-                x2 = x
-                y2 = y
-                code2 = computeCode(x2, y2)
-    if accept:
-        a = []
-        p1 = (x1, y1)
-        p2 = (x2, y2)
-        a.append(p1)
-        a.append(p2)
-        draw.line((x1, y1, x2, y2), fill=(0, 0, 255))
-        return a
-    else:
-        a = [(None, None), (None, None)]
-        return a
+            return False
 
-
-def findNext(i, n, points):
-    for j in range(i + 1, n):
-        if (points[j][0] != None):
-            return j
-
-
-def sutherland_hodgman(n, points):
-    count = 0
-    flag = 0
-    final = list()
-    if (computeCode(points[n - 1][0], points[n - 1][1]) != 0):
-        flag = 1
-    for i in range(0, n - 1):
-        start = [points[i][0], points[i][1]]
-        end = [points[i + 1][0], points[i + 1][1]]
-        if (computeCode(end[0], end[1]) == 0 and computeCode(start[0], start[1]) != 0):
-            count = count + 1
-            temp = []
-            temp.append(None)
-            temp.append(None)
-            final.append(temp)
-            count = count + 1
-
-        a = lineClip(start[0], start[1], end[0], end[1])
-        temp = []
-        temp.append(a[0][0])
-        temp.append(a[0][1])
-        final.append(temp)
-        count = count + 1
-        temp = []
-        temp.append(a[1][0])
-        temp.append(a[1][1])
-        final.append(temp)
-        count = count + 1
-        count = count - 1
-    count = count + 1
-
-    if (flag == 1):
-        temp = []
-        temp.append(None)
-        temp.append(None)
-        final.append(temp)
-        count = count + 1
-
-    startIndex = findNext(-1, count, final)
-    start = [final[startIndex][0], final[startIndex][1]]
-    flag = 0
-    back = [start[0], start[1]]
-    for i in range(startIndex + 1, count + 1):
-        if (flag == 1 and final[i][0] != None):
-            flag = 0
-            if (final[i - 1][0] == None):
-                back[0] = final[i][0]
-                back[1] = final[i][1]
-                continue
-
-        if (final[i][0] == None):
-            continue
-
-        elif (final[i + 1][0] == None):
-            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(255, 255, 255))
-            draw.line((final[i][0], final[i][1], back[0], back[1]), fill=(255, 255, 255))
-            if (i + 1 != count + 1):
-                index = findNext(i, count, final)
-                start[0] = final[index][0]
-                start[1] = final[index][1]
-            flag = 1
+    def compute_intersection(self,p1,p2,p3,p4):
+        
+        """
+        given points p1 and p2 on line L1, compute the equation of L1 in the
+        format of y = m1 * x + b1. Also, given points p3 and p4 on line L2,
+        compute the equation of L2 in the format of y = m2 * x + b2.
+        
+        To compute the point of intersection of the two lines, equate
+        the two line equations together
+        
+        m1 * x + b1 = m2 * x + b2
+        
+        and solve for x. Once x is obtained, substitute it into one of the
+        equations to obtain the value of y.
+        
+        if one of the lines is vertical, then the x-coordinate of the point of
+        intersection will be the x-coordinate of the vertical line. Note that
+        there is no need to check if both lines are vertical (parallel), since
+        this function is only called if we know that the lines intersect.
+        """
+        
+        # if first line is vertical
+        if p2[0] - p1[0] == 0:
+            x = p1[0]
+            
+            # slope and intercept of second line
+            m2 = (p4[1] - p3[1]) / (p4[0] - p3[0])
+            b2 = p3[1] - m2 * p3[0]
+            
+            # y-coordinate of intersection
+            y = m2 * x + b2
+        
+        # if second line is vertical
+        elif p4[0] - p3[0] == 0:
+            x = p3[0]
+            
+            # slope and intercept of first line
+            m1 = (p2[1] - p1[1]) / (p2[0] - p1[0])
+            b1 = p1[1] - m1 * p1[0]
+            
+            # y-coordinate of intersection
+            y = m1 * x + b1
+        
+        # if neither line is vertical
         else:
-            draw.line((start[0], start[1], final[i][0], final[i][1]), fill=(255, 255, 255))
-            start[0] = final[i][0]
-            start[1] = final[i][1]
-        if (final[i - 1][0] == None):
-            back[0] = final[i][0]
-            back[1] = final[i][1]
-    draw.line((0,0, 1,1), fill=(255,255,255))
-    #im1.show()
-    #im1.save('Before clipping.png')
-    im.show()
-    im.save('After clipping.png')
+            m1 = (p2[1] - p1[1]) / (p2[0] - p1[0])
+            b1 = p1[1] - m1 * p1[0]
+            
+            # slope and intercept of second line
+            m2 = (p4[1] - p3[1]) / (p4[0] - p3[0])
+            b2 = p3[1] - m2 * p3[0]
+        
+            # x-coordinate of intersection
+            x = (b2 - b1) / (m1 - m2)
+        
+            # y-coordinate of intersection
+            y = m1 * x + b1
+        
+        intersection = (x,y)
+        
+        return intersection
+    
+    def sutherlandHodgmanClip(self,subject_polygon,clipping_polygon):
+        
+        final_polygon = subject_polygon.copy()
+        
+        for i in range(len(clipping_polygon)):
+            
+            # stores the vertices of the next iteration of the clipping procedure
+            next_polygon = final_polygon.copy()
+            
+            # stores the vertices of the final clipped polygon
+            final_polygon = []
+            
+            # these two vertices define a line segment (edge) in the clipping
+            # polygon. It is assumed that indices wrap around, such that if
+            # i = 1, then i - 1 = K.
+            c_edge_start = clipping_polygon[i - 1]
+            c_edge_end = clipping_polygon[i]
+            
+            for j in range(len(next_polygon)):
+                
+                # these two vertices define a line segment (edge) in the subject
+                # polygon
+                s_edge_start = next_polygon[j - 1]
+                s_edge_end = next_polygon[j]
+                
+                if self.is_inside(c_edge_start,c_edge_end,s_edge_end):
+                    if not self.is_inside(c_edge_start,c_edge_end,s_edge_start):
+                        intersection = self.compute_intersection(s_edge_start,s_edge_end,c_edge_start,c_edge_end)
+                        final_polygon.append(intersection)
+                    final_polygon.append(tuple(s_edge_end))
+                elif self.is_inside(c_edge_start,c_edge_end,s_edge_start):
+                    intersection = self.compute_intersection(s_edge_start,s_edge_end,c_edge_start,c_edge_end)
+                    final_polygon.append(intersection)
+        
+        return np.asarray(final_polygon)
+    
+    def __call__(self,A,B):
+        clipped_polygon = self.sutherlandHodgmanClip(A,B)
+        """ if len(clipped_polygon) == 0 and self.warn_if_empty:
+            warnings.warn("No intersections found. Are you sure your \
+                          polygon coordinates are in clockwise order?")
+         """
+        return clipped_polygon
 
 if __name__ == '__main__':
-    point = [[100, 290], [100, 210], [275, 230], [150, 250], [275, 270], [100, 290]]
-    orig = list()
-    for i in range(0, 10):
-        orig.append(point[i // 2][i % 2])
+    
+    # some test polygons
+    
+    sutherlandHodgmanClip = PolygonClipper()
+    
+    # squares
+    # subject_polygon = [(-1,1),(1,1),(1,-1),(-1,-1)]
+    # clipping_polygon = [(0,0),(0,2),(2,2),(2,0)]
+    
+    # squares: different order of points
+    subject_polygon = [(-1,-1),(-1,1),(1,1),(1,-1)]
+    clipping_polygon = [(2,0),(0,0),(0,2),(2,2)]
+    
+    # triangles
+    # subject_polygon = [(0,0),(2,1),(2,0)]
+    # clipping_polygon = [(1,0.5),(3,1.5),(3,0.5)]
+    
+    # star and square
+    #subject_polygon = [(0,3),(0.5,0.5),(3,0),(0.5,-0.5),(0,-3),(-0.5,-0.5),(-3,0),(-0.5,0.5)]
+    #clipping_polygon = [(-2,-2),(-2,2),(2,2),(2,-2)]
+    
+    # star and triangle
+    # subject_polygon = [(0,3),(0.5,0.5),(3,0),(0.5,-0.5),(0,-3),(-0.5,-0.5),(-3,0),(-0.5,0.5)]
+    # clipping_polygon = [(0,2),(2,-2),(-2,-2)]
+    
+    subject_polygon = np.array(subject_polygon)
+    clipping_polygon = np.array(clipping_polygon)
 
-    #draw2.polygon(tuple(orig), outline=255)
-    time.sleep(2)
-    sutherland_hodgman(6, point)
+    print("subject_polygon: ", subject_polygon)
+    print("clipping_polygon: ",clipping_polygon)
+    clipped_polygon = sutherlandHodgmanClip(subject_polygon, clipping_polygon)
+    print("res: ",clipped_polygon)
+    
