@@ -18,7 +18,9 @@ if __name__ == '__main__':
         alg = seleccionar_algoritmo_linea()
         #print("puntos: ", P1, P2)
         if alg == 1: #Cohen-Sutherland
-            puntos_linea_recorte = cohenSutherlandClip(P1, P2)
+            print("EII: ", puntos_viewport[0])
+            print("ESD: ", puntos_viewport[1])
+            puntos_linea_recorte = cohenSutherlandClip(P1, P2, EII=puntos_viewport[0], ESD=puntos_viewport[1])
             if not puntos_linea_recorte:
                 print("La linea no está dentro del viewport.")
                 mostrar_juego(puntos_viewport, puntos_linea_completa, tipo_viewport=tipo_viewport, tipo_recorte=1)
