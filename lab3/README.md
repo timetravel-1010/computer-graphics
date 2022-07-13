@@ -34,27 +34,27 @@ En caso de ser requerido, se puede modificar el valor del tamaño de una casilla
 
 Lo anterior se realiza en las líneas 17 para n y 23 para x0, del archivo `interfaz.py` como se muestra en la siguiente imagen.
 
-![modificar n y x0](/img/modificar-n-y-x0.png)
+![modificar n y x0](img/modificar-n-y-x0.png)
 
 Adicionalmente, puede modificar el valor de y0 (línea 24) para cambiar la coordenada y del origen (0,0) en la pantalla.
 
 
 ### Ejemplo 1. Algoritmo Cohen-Sutherland
 
-![ejemplo 1 Cohen-Sutherland](/img/ejemplo1-Cohen-Sutherland.png)
+![ejemplo 1 Cohen-Sutherland](img/ejemplo1-Cohen-Sutherland.png)
 
 ### Ejemplo 2. Algoritmo Cohen-Sutherland
 
-![ejemplo 2 Cohen-Sutherland](/img/ejemplo2-Cohen-Sutherland.png)
+![ejemplo 2 Cohen-Sutherland](img/ejemplo2-Cohen-Sutherland.png)
 
 ### Ejemplo Algoritmo Cyrus-Beck
 
-![ejemplo Cyrus-Beck](/img/ejemplo1-Cyrus-Beck.png)
+![ejemplo Cyrus-Beck](img/ejemplo1-Cyrus-Beck.png)
 
 ### Ejemplo Algoritmo Sutherland-Hodgman
 
-![ejemplo Sutherland-Hodgman](/img/ejemplo1-Sutherland-Hodgman.png)
+![ejemplo Sutherland-Hodgman](img/ejemplo1-Sutherland-Hodgman.png)
 
 ### Ejemplo Algoritmo Weiler-Atherton
 
-![ejemplo Weiler-Atheron](/img/ejemplo1-Weiler-Atherton.png)
+![ejemplo Weiler-Atheron](img/ejemplo1-Weiler-Atherton.png)
