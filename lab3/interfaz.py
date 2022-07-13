@@ -28,7 +28,7 @@ def setup():
     global pantalla 
     pg.init()
     pantalla = pg.display.set_mode((ancho, alto))
-    pg.display.set_caption('Smart Robot')
+    pg.display.set_caption('Recorte de Líneas y Polígonos')
     pantalla.fill((255,255,255)) 
 
 """ crear la cuadrícula """
@@ -109,7 +109,7 @@ def mostrar_juego(viewport, puntos, tipo_viewport=None, tipo_recorte=None):
             pintar_poligono(puntos)
 
         #pintar_linea(bresenham(P1,P2), (200,200,0))
-        put_pixel(0, 0, (255,0,0)) #mostrar punto de origen relativo
+        put_pixel(0, 0, (121,0,128)) #mostrar punto de origen relativo
         #pintar_poligono([[10,10], [20,10], [30, 20], [20, 30], [10, 30],[0,20]])
         #pintar_poligono(((0,0),(100,0),(50,100)))
         #pol = [[100, 290], [100, 210], [275, 230], [150, 250], [275, 270], [100, 290]]

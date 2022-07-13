@@ -15,19 +15,19 @@ if __name__ == '__main__':
     if tipo_recorte == 1: # recorte de líneas
         P1, P2 = ingresar_datos_linea()
         puntos_linea_completa = bresenham(P1, P2)
+        #print ("todos los puntos: ", puntos_linea_completa)
         alg = seleccionar_algoritmo_linea()
         #print("puntos: ", P1, P2)
         if alg == 1: #Cohen-Sutherland
-            print("EII: ", puntos_viewport[0])
-            print("ESD: ", puntos_viewport[1])
             puntos_linea_recorte = cohenSutherlandClip(P1, P2, EII=puntos_viewport[0], ESD=puntos_viewport[1])
             if not puntos_linea_recorte:
                 print("La linea no está dentro del viewport.")
                 mostrar_juego(puntos_viewport, puntos_linea_completa, tipo_viewport=tipo_viewport, tipo_recorte=1)
             else:
-                i_0 = puntos_linea_completa.index(puntos_linea_recorte[0])
-                i_f = puntos_linea_completa.index(puntos_linea_recorte[1])
-                puntos_dentro = puntos_linea_completa[i_0:i_f+1]
+                #i_0 = puntos_linea_completa.index(puntos_linea_recorte[0])
+                #i_f = puntos_linea_completa.index(puntos_linea_recorte[1])
+                #puntos_dentro = puntos_linea_completa[i_0:i_f+1]
+                puntos_dentro = bresenham(puntos_linea_recorte[0], puntos_linea_recorte[1])
                 mostrar_juego(puntos_viewport, puntos_dentro, tipo_viewport=tipo_viewport, tipo_recorte=1)
         else: #Cyrus-Beck
             puntos_linea_recorte = CyrusBeckClip(P1, P2, len(puntos_viewport),vertices_viewport=puntos_viewport)
@@ -35,9 +35,10 @@ if __name__ == '__main__':
                 print("La línea no se está dentro del viewport.")
                 mostrar_juego(puntos_viewport, puntos_linea_completa, tipo_viewport=tipo_viewport, tipo_recorte=1)
             else:
-                i_0 = puntos_linea_completa.index(puntos_linea_recorte[0])
-                i_f = puntos_linea_completa.index(puntos_linea_recorte[1])
-                puntos_dentro = puntos_linea_completa[i_0:i_f+1]
+                #i_0 = puntos_linea_completa.index(puntos_linea_recorte[0])
+                #i_f = puntos_linea_completa.index(puntos_linea_recorte[1])
+                #puntos_dentro = puntos_linea_completa[i_0:i_f+1]
+                puntos_dentro = bresenham(puntos_linea_recorte[0], puntos_linea_recorte[1])
                 mostrar_juego(puntos_viewport, puntos_dentro, tipo_viewport=tipo_viewport, tipo_recorte=1)
     else: # recorte de polígonos
         n, puntos_poligono = ingresar_datos_poligono()
@@ -54,11 +55,11 @@ if __name__ == '__main__':
                 mostrar_juego(puntos_viewport, puntos_poligono, tipo_viewport=tipo_viewport, tipo_recorte=2)
             else:
                 mostrar_juego(puntos_viewport, puntos_poligono_recorte, tipo_viewport=tipo_viewport, tipo_recorte=2)
-        else: 
+        else:  # Weiler-Atherton
             puntos_string = puntos_a_string(puntos_poligono)
             viewport_string = puntos_a_string(puntos_viewport)
-            print("puntos string: ", puntos_string)
-            print("viewport string: ", viewport_string)
+            """ print("puntos string: ", puntos_string)
+            print("viewport string: ", viewport_string) """
             puntos_poligono_recorte = weilerAthertonClip(puntos_string, viewport_string)[0].split(' ')
             puntos_poligono_recorte = list(map(lambda x: int(float(x)), puntos_poligono_recorte))
             puntos_poligono_recorte = agrupar(puntos_poligono_recorte, 2)

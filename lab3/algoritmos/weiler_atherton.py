@@ -157,12 +157,12 @@ def CutByVerticalLine(s1, s2, list):
             if floatLarger(s2.y, s1.y):
                 inters.crossDi = 0 if inters.crossDi == 1 else 1
 
-            print("s1:%s, s2:%s, c1:%s, c2:%s, inter:%s, crossDi:%s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y)), ("%f, %f" % (c1.x, c1.y)), ("%f, %f" % (c2.x, c2.y)), ("%f, %f" % (inters.x, inters.y)), ("%s" % ("in" if inters.crossDi == 0 else "out"))))
+            #print("s1:%s, s2:%s, c1:%s, c2:%s, inter:%s, crossDi:%s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y)), ("%f, %f" % (c1.x, c1.y)), ("%f, %f" % (c2.x, c2.y)), ("%f, %f" % (inters.x, inters.y)), ("%s" % ("in" if inters.crossDi == 0 else "out"))))
             crossXs.append(inters)
     return crossXs
 
 def CutByLine(s1, s2, list):
-    print("s1 = %s, s2 = %s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y))))
+    #print("s1 = %s, s2 = %s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y))))
 
     if floatEqual(s1.x, s2.x):
         return CutByVerticalLine(s1, s2, list)
@@ -179,7 +179,7 @@ def CutByLine(s1, s2, list):
         vertex = list[i]
         c1 = shearedList[i % len(list)]
         c2 = shearedList[(i + 1) % len(list)]
-        print("c1 = %s, c2 = %s" % (("%f, %f" % (c1.x, c1.y - c1.x * slope)), ("%f, %f" % (c2.x, c2.y - c2.x * slope))))
+        #print("c1 = %s, c2 = %s" % (("%f, %f" % (c1.x, c1.y - c1.x * slope)), ("%f, %f" % (c2.x, c2.y - c2.x * slope))))
 
         if(floatEqual(c1.y, c2.y) and floatEqual(c1.y, y)):
             continue
@@ -241,7 +241,7 @@ def CutByLine(s1, s2, list):
             if floatLarger(s2.x, s1.x):
                 inters.crossDi = 0 if inters.crossDi == 1 else 1
 
-            print("s1:%s, s2:%s, c1:%s, c2:%s, inter:%s, crossDi:%s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y)), ("%f, %f" % (c1.x, c1.y - c1.x * slope)), ("%f, %f" % (c2.x, c2.y - c2.x * slope)), ("%f, %f" % (inters.x, inters.y)), ("%s" % ("in" if inters.crossDi == 0 else "out"))))
+            #print("s1:%s, s2:%s, c1:%s, c2:%s, inter:%s, crossDi:%s" % (("%f, %f" % (s1.x, s1.y)), ("%f, %f" % (s2.x, s2.y)), ("%f, %f" % (c1.x, c1.y - c1.x * slope)), ("%f, %f" % (c2.x, c2.y - c2.x * slope)), ("%f, %f" % (inters.x, inters.y)), ("%s" % ("in" if inters.crossDi == 0 else "out"))))
             crossXs.append(inters)
 
     return crossXs
@@ -293,9 +293,9 @@ def Compose(list):
             oneResult.append(Vertex(inters.x, inters.y))
             inters.used = True
             loopvar = inters.nextS
-            print("--------------------" + str(inters.x) + "," + str(inters.y))
+            #print("--------------------" + str(inters.x) + "," + str(inters.y))
             while loopvar != None:
-                print(str(loopvar.x) + "," + str(loopvar.y))
+                #print(str(loopvar.x) + "," + str(loopvar.y))
                 oneResult.append(Vertex(loopvar.x, loopvar.y))
                 if isinstance(loopvar, Intersection):
                     curr = loopvar
@@ -338,7 +338,7 @@ def encode(Str):
     for i in range(len(X)):
         if (not floatEqual(X[i], X[i - 1])) or (not floatEqual(Y[i], Y[i - 1])):
             myList.append(Vertex(X[i], Y[i]))
-    print("lista pasada por encode: ", myList)
+    #print("lista pasada por encode: ", myList)
     return myList
 
 
@@ -371,8 +371,8 @@ def toClockwise(list):
         return list
 
 def weilerAthertonClip(poly1, poly2, output_clockwise = True):
-    print(poly1)
-    print(poly2)
+    """ print(poly1)
+    print(poly2) """
     listS = encode(poly1)
     listC = encode(poly2)
     listS = toClockwise(listS)
@@ -415,8 +415,8 @@ def weilerAthertonClip(poly1, poly2, output_clockwise = True):
     if len(listI) == 0:
         return decode([processNoCross(listS, listC)])
 
-    printList(listS[0], True)
-    printList(listC[0], False)
+    """ printList(listS[0], True)
+    printList(listC[0], False) """
 
     results = Compose(listI)
     if not output_clockwise:

@@ -10,13 +10,13 @@ TOP = 8	 # 1000
 
 # Defining x_max, y_max and x_min, y_min for rectangle
 # Since diagonal points are enough to define a rectangle
-xMax = 10.0
+""" xMax = 10.0
 yMax = 8.0
 xMin = 4.0
-yMin = 4.0
+yMin = 4.0 """
 
 # Function to compute region code for a point(x, y)
-def computeCode(x, y, x_min=xMin, y_min=yMin, x_max=xMax, y_max=yMax):
+def computeCode(x, y, x_min, y_min, x_max, y_max):
 	code = INSIDE
 	if x < x_min:	 # to the left of rectangle
 		code |= LEFT
@@ -32,14 +32,14 @@ def computeCode(x, y, x_min=xMin, y_min=yMin, x_max=xMax, y_max=yMax):
 
 # Implementing Cohen-Sutherland algorithm
 # Clipping a line from P1 = (x1, y1) to P2 = (x2, y2)
-def cohenSutherlandClip(P1, P2, EII=[xMin,yMin], ESD=[xMax,yMax]):
+def cohenSutherlandClip(P1, P2, EII=None, ESD=None):
 	x1, y1 = P1
 	x2, y2 = P2
 	x_min, y_min = EII
 	x_max, y_max = ESD
 	# Compute region codes for P1, P2
-	code1 = computeCode(x1, y1)
-	code2 = computeCode(x2, y2)
+	code1 = computeCode(x1, y1, x_min, y_min, x_max, y_max)
+	code2 = computeCode(x2, y2, x_min, y_min, x_max, y_max)
 	accept = False
 
 	while True:
