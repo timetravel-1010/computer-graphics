@@ -1,0 +1,62 @@
+newmtl castleRender:castle:castle1:BUILDING3:cast:castle:cathedralRender:tower14SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd wndw038M.jpg
+Ni 1.00
+newmtl castleRender:castle:castle1:BUILDING3:cast:structure2SG2
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -s_0.833333_0.5_-mm_0_0.637_slat41XL.jpg
+bump  -bm 1 -s_0.5_0.5_slat41XLb.jpg
+Ni 1.00
+newmtl castleRender:castle:castle1:BUILDING3:cast:structure2SG4
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd wndw107M.jpg
+bump  -bm 1 wndw107Mb.jpg
+Ni 1.00
+newmtl castleRender:castle:castle1:blinn2SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+newmtl castleRender:castle:castle1:buildings:domeSquare:HillRender:dome:a:BuildingRender:Building:pCube602SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -mm_0_0.725581_wndw038M.jpg
+bump  -bm 1 -mm_0_0.725581_wndw038M.jpg
+Ni 1.00
+newmtl castleRender:castle:castle1:tarima:castle:CastleRender:towerRender:towerRender:belem:belemRender2:lambert5SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd -s_0.666667_0.666667_-mm_0_0.637209_brck91L.jpg
+bump  -bm 1 -s_0.666667_0.666667_brck91Lb.jpg
+Ni 1.00
+newmtl castleRender:towercastle:lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd ground009b.jpg
+bump  -bm 1 ground009b.jpg
+Ni 1.00
+newmtl castleRender:towercastle:towerRender:tower1:belem:belemRender2:lambert4SG
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd germany010.jpg
+bump  -bm 1 germany010b.jpg
+Ni 1.00
