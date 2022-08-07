@@ -48,7 +48,6 @@ var objLoader = new THREE.OBJLoader();
 objLoader.setPath('/assets/');
 objLoader.load('objects/table.obj', function(object){
 	object.position.z = 4;
-	object.color = new THREE.Color('rgb(110,10,10)')
 	scene.add(object);
 });
 
