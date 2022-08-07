@@ -1,5 +1,5 @@
 from aifc import Error
-
+# Formula para convertir de RGB to HSV
 def rgb_to_hsv(r, g, b): 
 r /= 255
 g /= 255 
@@ -51,3 +51,16 @@ def hsv_to_rgb(h, s, v):
     return (round((r1+m)*255), round((g1+m)*255), round((b1+m)*255))
 
 print(hsv_to_rgb(360, 80, 60)) #(h, %, %)
+
+# Formula para convertir de RGB to CMY
+def rgb_a_cmy(r, g, b):
+  
+    # RGB values are divided by 255 
+    # to bring them between 0 to 1.
+    c = 1 - r / 255
+    m = 1 - g / 255
+    y = 1 - b / 255
+    return (c, m, y)
+
+print(rgb_a_cmy(r, g, b))
+
