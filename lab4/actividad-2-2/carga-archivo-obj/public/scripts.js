@@ -26,11 +26,9 @@ backLight.position.set(10, 0, -10).normalize();
 
 
 var light = new THREE.AmbientLight(0x404040);
-
-var scene = new THREE.Scene(); // initialising the scene
-scene.background = new THREE.Color( 0xffffff );
-
 scene.add(light);
+
+//scene.background = new THREE.Color( 0xffffff );
 
 scene.add(keyLight);
 scene.add(fillLight);
@@ -38,53 +36,35 @@ scene.add(backLight);
 
 
 
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setTexturePath('/assets/');
-mtlLoader.setPath('/assets/');
-mtlLoader.load('objects/table.mtl', function(materials) {
-	materials.preload();
-	var objLoader = new THREE.OBJLoader();
-	objLoader.setMaterials(materials);
-	objLoader.setPath('/assets/');
-	objLoader.load('objects/table.obj', function(object){
-		object.position.y -= 0;
-		scene.add(object);
-	});
+var objLoader = new THREE.OBJLoader();
+objLoader.setPath('/assets/');
+objLoader.load('objects/seat.obj', function(object){
+	object.position.x = -1;
+	object.position.z = 4;
+	scene.add(object);
 });
 
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setTexturePath('/assets/');
-mtlLoader.setPath('/assets/');
-mtlLoader.load('objects/Lowpoly_modern_sedan.mtl', function(materials) {
-	materials.preload();
-	var objLoader = new THREE.OBJLoader();
-	objLoader.setMaterials(materials);
-	objLoader.setPath('/assets/');
-	objLoader.load('objects/Lowpoly_modern_sedan.obj', function(object){
-		//object.position.x -= 0;
-		object.position.x -= 5;
-		object.position.y -= 0;
-		scene.add(object);
-	});
+var objLoader = new THREE.OBJLoader();
+objLoader.setPath('/assets/');
+objLoader.load('objects/table.obj', function(object){
+	object.position.z = 4;
+	object.color = new THREE.Color('rgb(110,10,10)')
+	scene.add(object);
 });
 
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setTexturePath('/assets/');
-mtlLoader.setPath('/assets/');
-mtlLoader.load('objects/objBuilding.mtl', function(materials) {
-	materials.preload();
-	var objLoader = new THREE.OBJLoader();
-	objLoader.setMaterials(materials);
-	objLoader.setPath('/assets/');
-	objLoader.load('objects/objBuilding.obj', function(object){
-		//object.position.x -= 0;
-		object.position.x += 5;
-		object.position.y -= 0;
-		scene.add(object);
-	});
+var objLoader = new THREE.OBJLoader();
+objLoader.setPath('/assets/');
+objLoader.load('objects/objBuilding.obj', function(object){
+	scene.add(object);
 });
 
-
+var objLoader = new THREE.OBJLoader();
+objLoader.setPath('/assets/');
+objLoader.load('objects/Lowpoly_modern_sedan.obj', function(object){
+	//object.position.x -= 0;
+	object.position.x -= 5;
+	scene.add(object);
+});
 
 var animate = function () {
 	requestAnimationFrame( animate );
