@@ -2,7 +2,7 @@
 
 Se ha implementado un servidor simple con express.js para evitar problemas de origen cruzado al ejecutar threeJS.
 
-Estando ubicado dentro de la carpeta de la carpeta [cargar-archivo-obj](https://github.com/timetravel-1010/computer-graphics/tree/main/lab4/actividad-2-1/carga-archivo-obj) se deben ejecutar los siguientes comandos
+Estando ubicado dentro de la carpeta de la carpeta [cargar-archivo-obj](https://github.com/timetravel-1010/computer-graphics/tree/main/lab4/actividad-2-2/carga-archivo-obj) se deben ejecutar los siguientes comandos
 ```bash
 $ npm install
 $ npm run start
