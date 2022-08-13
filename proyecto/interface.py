@@ -1,7 +1,10 @@
 ﻿import pygame as pg
 import os, sys
+import numpy as np
+
 
 from algoritmos.rastering.bresenham import bresenham
+
 """ from algoritmos.cohen_sutherland import cohenSutherlandClip
 from algoritmos.cyrus_beck import CyrusBeckClip
 from algoritmos.sutherland_hodgman import PolygonClipper
@@ -15,13 +18,21 @@ x_min = 4.0
 y_min = 4.0 """
 
 n = 480 #matriz nxn, 480 -> 1:1 pixel
-ancho = 720 #ancho de la pantalla
+ancho = 640 #ancho de la pantalla
 alto = ancho
 size = ancho // n #tamaño del lado de cada *pixel*
 
 normal_size = ancho // 10 #10 -> número de columnas y filas
 print("size:" , size)
-
+ticks = 10
+colores = { 0:(255,255,255), # 0 -> casilla libre
+            1:(150,75,0),
+            2:(0,230,230),
+            3:(0, 255, 0),
+            4:(204,204,255),
+            5:(255,255,0),
+            6:(255,0,0),
+        }
 # origen de coordenadas, cambiar en caso de necesitar
 x0 = 0
 y0 = 0
@@ -34,14 +45,17 @@ def setup():
     pg.display.set_caption('Smart RobotUI')
     pantalla.fill((255,255,255)) 
 
-def input():
+pos_item1 = {'x': 0, 'y': 0}
+pos_item2 = {'x': 0, 'y': 0}
+
+def input(nombre_lectura):
     global x0, y0, pos_item1, pos_item2
     items_encontrados = 0
 
     with open(f"mundos/{nombre_lectura}.txt", "r") as f:
         content = f.read().split('\n')
         mundo = []
-        for i in range(n):
+        for i in range(10):
             fila = list(map(lambda x: int(x), content[i].split(" ")))
             mundo.append(fila)
             try: 
@@ -126,7 +140,7 @@ def dibujar_cuadrado(origen, size, color=(255,0,0)):
     #print("inicio: ", origen)
     for y in range(origen[1], origen[1]+size+1):
         vertices_color += bresenham((origen[0], y), (origen[0]+size, y))
-    pintar_viewport_vertices(vertices_color)
+    pintar_viewport_vertices(vertices_color, color=color)
     #print("lineas: ", vertices_color)
 
 def pintar_poligono(puntos, color=(0,0,0)):
@@ -220,6 +234,8 @@ class Robot():
         self.y = x
         self.color = color
         self.tam = tam
+        print("x: ",self.x)
+        print("y: ",self.y)
     
     def pintar(self):
         dibujar_cuadrado((self.x, self.y), self.tam, color=self.color) #posicion x, posicion y, ancho, alto.
@@ -234,27 +250,50 @@ class Robot():
         elif direccion == "abajo":
             self.y += self.tam
 
-def mostrar_juego(tipo_viewport=None): 
+def pintar_mundo(mundo):
+        x = 0
+        y = 0
+        tam = normal_size #tamaño de cada cuadro.
+        print("tam: ", tam)
+        for fila in mundo: #recorre las filas.
+            for valor in fila: #recorre cada elemento de la fila.
+                dibujar_cuadrado((x, y), tam, color=colores.get(valor)) #posicion x, posicion y, ancho, alto.           
+                x += tam
+            x = 0
+            y += tam
+
+def mostrar_juego(resultado, inicio_robot): 
+    print("inicio: ", inicio_robot)
+    robot = Robot(inicio_robot[0]*normal_size, inicio_robot[0]*normal_size, normal_size, (0,230,230))
+    resultado = resultado[0]
+    clock = pg.time.Clock() #reloj para manipular la velocidad de la ejecución.
+    i = len(resultado)-1
     while True:        
+        clock.tick(ticks) 
         for event in pg.event.get():
             if event.type == pg.QUIT: #para detener la ejecución al cerrar la ventana
                 pg.quit()
                 sys.exit()
         
-        #pintar_linea(bresenham(P1,P2), (200,200,0))
-        #put_pixel(0, 0, (121,0,128)) #mostrar punto de origen relativo
-        #pintar_poligono([[10,10], [20,10], [30, 20], [20, 30], [10, 30],[0,20]])
-        #pintar_poligono(((0,0),(100,0),(50,100)))
-        #pol = [[100, 290], [100, 210], [275, 230], [150, 250], [275, 270], [100, 290]]
-        #pintar_poligono(pol)
-        #grid() #mostrar la cuadrícula.
-        
         #robot.mover("derecha")
-        robot.pintar()
+        #robot.pintar()
+        if (i >= 0):
+            try:
+                pintar_mundo(resultado[i][1]) #pinta el mundo correspondiente al nodo actual.
+                print("mov: ", resultado[i][0])
+                robot.mover(resultado[i][0]) #se obtiene el operador para mover el robot. 
+                #print("combustible actual:", resultado[i][2])
+                #print("costo: ", resultado[i][3])
+                #print("heuristica: ", resultado[i][4])
+                robot.pintar()
+            except ValueError:
+                print("No se encontró la solución.")
+        i -= 1
+        #print("color: ", colores[2])
+        #dibujar_cuadrado((2*normal_size,2*normal_size), normal_size, color=colores[2])
         #dibujar_cuadrado((0,0), 5)
-        #put_pixel(0, 0, color=(200,250,0))
-        #put_pixel(0, 5, color=(0,0,250))
 
+        grid() #mostrar la cuadrícula
         #pantalla.fill((255, 255, 255))
         pg.display.update()
         pg.display.flip() #actualizar el mundo para mostrar nuevos cambios.
@@ -263,7 +302,7 @@ def mostrar_juego(tipo_viewport=None):
 if __name__ == "__main__":
     x0 = 0
     y0 = 0
-    
-    robot = Robot(x0, y0, normal_size, (255,100,0))
-    robot.pintar()
-    mostrar_juego()
+    #robot.pintar()
+    mundo = input("mundo")
+    print("mundo: ", mundo)
+    mostrar_juego(None, mundo)
