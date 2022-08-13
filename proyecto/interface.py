@@ -10,20 +10,19 @@ alto = ancho
 size = ancho // n #tamaño del lado de cada *pixel*
 
 normal_size = ancho // 10 #10 -> número de columnas y filas
-ticks = 5
-colores = { 0:(255,255,255), # 0 -> casilla libre
-            1:(150,75,0),
-            2:(0,123,123),
-            3:(0, 255, 0),
-            4:(204,204,255),
-            5:(255,255,0),
-            6:(255,0,0),
+ticks = 5 #velocidad del reloj, mayor número -> mayor velocidad
+colores = { 0:(255,255,255), #casilla libre
+            1:(150,75,0), #muros
+            2:(0,123,123), #punto de inicio
+            3:(0, 255, 0), #primer nave
+            4:(204,204,255), #segunda nave
+            5:(255,255,0), #un ítem
+            6:(255,0,0), #aceite
         }
-# origen de coordenadas, cambiar en caso de necesitar
-x0 = 0
-y0 = 0
 
-#configuración inicial de la pantalla
+""" 
+configuración inicial de la pantalla 
+"""
 def setup():
     global pantalla 
     pg.init()
@@ -31,7 +30,10 @@ def setup():
     pg.display.set_caption('Smart RobotUI')
     pantalla.fill((255,255,255)) 
 
-
+""" 
+función usada para leer el archivo txt del mundo inicial, reciba
+el nombre del archivo sin la extensión .txt
+"""
 def input(nombre_lectura):
     with open(f"mundos/{nombre_lectura}.txt", "r") as f:
         content = f.read().split('\n')
@@ -39,14 +41,11 @@ def input(nombre_lectura):
         for i in range(10):
             fila = list(map(lambda x: int(x), content[i].split(" ")))
             mundo.append(fila)
-            try: 
-                y0 = fila.index(2)
-                x0 = i  
-            except ValueError:
-                pass 
-        return np.array(mundo), x0, y0
+        return np.array(mundo)
 
-""" crear la cuadrícula """
+""" 
+función usada para crear la cuadrícula 
+"""
 def grid():
     x = 0
     y = 0
@@ -60,12 +59,16 @@ def grid():
 
 """ 
 función que permite el dibujo de un rectángulo que actúa como unidad fundamental, el pixel.
+Recibe una coordenada x y y para el pixel y opcionalmente su color
 """
 def put_pixel(x, y, color=(0,0,0)):
     global size
     pg.draw.rect(pantalla, color, (x*size, y*size, size, size))
 
 
+""" 
+función para el dibujo de una línea dados sus puntos y opcionalmente su color.
+"""
 def pintar_linea(puntos, color=(0,0,0)):
     for punto in puntos:
         put_pixel(punto[0], punto[1], color=color)

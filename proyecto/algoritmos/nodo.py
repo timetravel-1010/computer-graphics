@@ -1,5 +1,4 @@
 import numpy as np
-import functools
 
 total_items = 2
 operadores = [ "izquierda", "derecha", "arriba", "abajo" ]
