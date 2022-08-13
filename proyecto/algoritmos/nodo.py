@@ -6,7 +6,7 @@ operadores = [ "izquierda", "derecha", "arriba", "abajo" ]
 
 class Nodo:
     
-    def __init__(self, matriz, x, y, nodo_padre, operador, profundidad, costo, nave, combustible, cantidad_item, matriz_aux=None, algoritmo_avara=False, buscar_item1=True, buscar_item2=True, count_aux=None) -> None:
+    def __init__(self, matriz, x, y, nodo_padre, operador, profundidad, costo, nave, combustible, cantidad_item) -> None:
         self.matriz = np.array(matriz)
         self.x = x
         self.y = y
@@ -20,11 +20,6 @@ class Nodo:
         self.estado = self.validar_direcciones(x, y)
         self.cantidad_item = cantidad_item
         self.item_encontrado = False
-        self.matriz_aux = np.array(matriz_aux)
-        self.algoritmo_avara = algoritmo_avara
-        self.buscar_item1 = buscar_item1
-        self.buscar_item2 = buscar_item2
-        self.count_aux = count_aux
 
     #método que comprueba si este nodo es meta, True si es meta, False en caso contrario.
     def es_meta(self) -> bool:
@@ -75,19 +70,6 @@ class Nodo:
             return [[self.operador, self.matriz, self.combustible, self.costo, self.heuristica]] + self.nodo_padre.encontrar_camino() 
 
 
-    def encontrar_camino_aux(self) -> list:
-        '''
-        método que retorna una lista con parejas (operador, mundo), correspondientes al camino
-        para llegar a la meta y el estado del mundo en cada nodo.
-        '''
-        #print("combustible actual:", self.combustible)
-        if self.nodo_padre is None:
-            return []
-        else:    
-            return [self.nave, [self.operador]] + self.nodo_padre.encontrar_camino_aux() 
-    
-
-
     #método que verifica que en cada dirección no se salga de la matriz.
     def validar_direcciones(self, x, y):
         izquierda = self.matriz[self.x][self.y-1] if y > 0 else -1
@@ -100,9 +82,4 @@ class Nodo:
             "derecha": derecha, 
             "arriba": arriba,
             "abajo": abajo,    
-        } 
-
-    def __lt__(self, other):
-        if self.algoritmo_avara:
-            return (self.heuristica < other.heuristica)
-        return ((self.heuristica + self.costo) < (other.heuristica + other.costo))
+        }
