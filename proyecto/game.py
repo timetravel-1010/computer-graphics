@@ -1,6 +1,5 @@
 import pygame as pg
 import sys, os
-import time
 import numpy as np
 
 from robot import Robot
